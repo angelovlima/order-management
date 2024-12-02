@@ -1,0 +1,5 @@
+databaseChangeLog:
+        - include:
+                file: db/changelog/01-create-delivery.yaml
+        - include:
+                file: db/changelog/02-create-delivery-history.yaml

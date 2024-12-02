@@ -1,0 +1,16 @@
+version: '1'
+services:
+  product-catalog-db:
+    image: postgres:16
+    container_name: product-catalog-db
+    environment:
+      POSTGRES_DB: product_catalog_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5438:5432"
+    volumes:
+      - product_catalog_data:/var/lib/postgresql/data
+
+volumes:
+  product_catalog_data:

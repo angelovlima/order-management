@@ -1,0 +1,16 @@
+version: '1'
+services:
+  delivery-logistics-db:
+    image: postgres:16
+    container_name: delivery-logistics-db
+    environment:
+      POSTGRES_DB: delivery_logistics_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5439:5432"
+    volumes:
+      - delivery_logistics_data:/var/lib/postgresql/data
+
+volumes:
+  delivery_logistics_data:

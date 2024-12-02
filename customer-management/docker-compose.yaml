@@ -1,0 +1,16 @@
+version: '1'
+services:
+  customer-management-db:
+    image: postgres:16
+    container_name: customer-management-db
+    environment:
+      POSTGRES_DB: customer_management_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - customer_management_data:/var/lib/postgresql/data
+
+volumes:
+  customer_management_data:
