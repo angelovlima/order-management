@@ -1,7 +1,6 @@
 package br.com.fiap.customer_management.api.customer.controller;
 
 import br.com.fiap.customer_management.api.customer.domain.Customer;
-import br.com.fiap.customer_management.api.customer.exception.ResourceNotFoundException;
 import br.com.fiap.customer_management.api.customer.usecase.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -105,12 +104,11 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}/exists")
+    @Operation(summary = "Verifica se um cliente existe pelo ID")
     public ResponseEntity<Void> checkCustomerExists(@PathVariable Long id) {
-        try {
-            findCustomerByIdUseCase.execute(id);
+        if (findCustomerByIdUseCase.execute(id) != null) {
             return ResponseEntity.ok().build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 }

@@ -11,7 +11,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Product Catalog API")
+                .info(new Info().title("ProductEntity Catalog API")
                         .version("1.0")
                         .description("API para gerenciamento de catálogo e estoque"));
     }
