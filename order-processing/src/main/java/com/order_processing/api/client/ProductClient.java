@@ -20,7 +20,7 @@ public class ProductClient {
             webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/{id}/validate")
-                            .queryParam("quantity", requiredQuantity)
+                            .queryParam("stockQuantity", requiredQuantity)
                             .build(productId))
                     .retrieve()
                     .toBodilessEntity()
