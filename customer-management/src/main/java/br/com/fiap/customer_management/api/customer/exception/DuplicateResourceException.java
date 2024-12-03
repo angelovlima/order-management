@@ -1,4 +1,4 @@
-package br.com.fiap.customer_management.api.exception;
+package br.com.fiap.customer_management.api.customer.exception;
 
 public class DuplicateResourceException extends RuntimeException {
     public DuplicateResourceException(String message) {

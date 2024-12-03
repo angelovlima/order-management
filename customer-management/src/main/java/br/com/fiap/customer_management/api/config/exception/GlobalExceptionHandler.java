@@ -1,5 +1,8 @@
-package br.com.fiap.customer_management.api.exception;
+package br.com.fiap.customer_management.api.config.exception;
 
+import br.com.fiap.customer_management.api.customer.exception.DuplicateResourceException;
+import br.com.fiap.customer_management.api.customer.exception.InvalidOperationException;
+import br.com.fiap.customer_management.api.customer.exception.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

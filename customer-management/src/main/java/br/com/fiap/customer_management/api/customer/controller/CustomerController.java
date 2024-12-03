@@ -1,29 +1,29 @@
-package br.com.fiap.customer_management.api.controller;
+package br.com.fiap.customer_management.api.customer.controller;
 
-import br.com.fiap.customer_management.api.exception.ResourceNotFoundException;
-import br.com.fiap.customer_management.api.model.dto.CustomerDTO;
-import br.com.fiap.customer_management.api.service.CustomerService;
+import br.com.fiap.customer_management.api.customer.domain.Customer;
+import br.com.fiap.customer_management.api.customer.exception.ResourceNotFoundException;
+import br.com.fiap.customer_management.api.customer.usecase.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
 
-    private final CustomerService customerService;
-
-    @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    private final CreateCustomerUseCase createCustomerUseCase;
+    private final FindCustomerByIdUseCase findCustomerByIdUseCase;
+    private final UpdateCustomerUseCase updateCustomerUseCase;
+    private final DeleteCustomerUseCase deleteCustomerUseCase;
+    private final FindAllCustomersUseCase findAllCustomersUseCase;
 
     @PostMapping
     @Operation(
@@ -32,7 +32,7 @@ public class CustomerController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CustomerDTO.class),
+                            schema = @Schema(implementation = Customer.class),
                             examples = {
                                     @ExampleObject(
                                             name = "Exemplo de Registro de Cliente",
@@ -43,9 +43,9 @@ public class CustomerController {
                     )
             )
     )
-    public ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customerDTO) {
-        CustomerDTO newCustomer = customerService.save(customerDTO);
-        return new ResponseEntity<>(newCustomer, HttpStatus.CREATED);
+    public ResponseEntity<Customer> saveCustomer(@RequestBody Customer customer) {
+        Customer createdCustomer = createCustomerUseCase.execute(customer);
+        return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -55,7 +55,7 @@ public class CustomerController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CustomerDTO.class),
+                            schema = @Schema(implementation = Customer.class),
                             examples = {
                                     @ExampleObject(
                                             name = "Exemplo de Atualização de Cliente",
@@ -66,11 +66,11 @@ public class CustomerController {
                     )
             )
     )
-    public ResponseEntity<CustomerDTO> updateCustomer(
+    public ResponseEntity<Customer> updateCustomer(
             @PathVariable Long id,
-            @RequestBody CustomerDTO customerDTO
+            @RequestBody Customer customer
     ) {
-        CustomerDTO updatedCustomer = customerService.update(id, customerDTO);
+        Customer updatedCustomer = updateCustomerUseCase.execute(id, customer);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
@@ -80,7 +80,7 @@ public class CustomerController {
             description = "Remove um cliente existente do sistema com base no ID fornecido."
     )
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
-        customerService.delete(id);
+        deleteCustomerUseCase.execute(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -89,8 +89,8 @@ public class CustomerController {
             summary = "Buscar Cliente por ID",
             description = "Retorna as informações de um cliente com base no ID fornecido."
     )
-    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id) {
-        CustomerDTO customer = customerService.findById(id);
+    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
+        Customer customer = findCustomerByIdUseCase.execute(id);
         return ResponseEntity.ok(customer);
     }
 
@@ -99,15 +99,15 @@ public class CustomerController {
             summary = "Listar Todos os Clientes",
             description = "Retorna uma lista com todos os clientes cadastrados no sistema."
     )
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        List<CustomerDTO> customers = customerService.findAll();
+    public ResponseEntity<List<Customer>> getAllCustomers() {
+        List<Customer> customers = findAllCustomersUseCase.execute();
         return ResponseEntity.ok(customers);
     }
 
     @GetMapping("/{id}/exists")
     public ResponseEntity<Void> checkCustomerExists(@PathVariable Long id) {
         try {
-            customerService.findById(id);
+            findCustomerByIdUseCase.execute(id);
             return ResponseEntity.ok().build();
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();

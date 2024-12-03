@@ -1,4 +1,4 @@
-package br.com.fiap.customer_management.api.model.entity;
+package br.com.fiap.customer_management.api.config.db.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "customer")
-public class Customer {
+public class CustomerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

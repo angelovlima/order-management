@@ -1,4 +1,4 @@
-package br.com.fiap.customer_management.api.exception;
+package br.com.fiap.customer_management.api.config.exception;
 
 import java.time.LocalDateTime;
 import java.util.List;

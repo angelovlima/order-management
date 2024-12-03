@@ -1,19 +1,9 @@
 package br.com.fiap.api.customer_management.api.service;
 
-import br.com.fiap.customer_management.api.exception.DuplicateResourceException;
-import br.com.fiap.customer_management.api.exception.ResourceNotFoundException;
-import br.com.fiap.customer_management.api.model.dto.CustomerDTO;
-import br.com.fiap.customer_management.api.model.entity.Customer;
-import br.com.fiap.customer_management.api.repository.CustomerRepository;
+import br.com.fiap.customer_management.api.config.db.repository.CustomerRepository;
 import br.com.fiap.customer_management.api.service.CustomerService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CustomerServiceTest {
