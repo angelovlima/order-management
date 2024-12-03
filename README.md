@@ -24,7 +24,7 @@ docker-compose up -d
 
 3. **Acessar a Documentação (Swagger)**
 
-Para acessar a documentação Swagger e visualizar os endpoints detalhados, acesse as seguintes URLs:
+Após subir os containers e rodar os serviços, para acessar a documentação Swagger e visualizar os endpoints detalhados, acesse as seguintes URLs:
 
 ```bash
 customer-management: http://localhost:8081/swagger-ui.html
