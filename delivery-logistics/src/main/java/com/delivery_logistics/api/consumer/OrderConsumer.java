@@ -1,9 +1,11 @@
 package com.delivery_logistics.api.consumer;
 
-import com.delivery_logistics.api.model.dto.OrderDeliveryDTO;
-import com.delivery_logistics.api.model.entity.Delivery;
-import com.delivery_logistics.api.model.enums.OrderStatus;
+import com.delivery_logistics.api.config.db.entity.DeliveryEntity;
+import com.delivery_logistics.api.delivery.domain.OrderDelivery;
+import com.delivery_logistics.api.delivery.domain.OrderStatus;
+import com.delivery_logistics.api.delivery.usecase.SaveDeliveryUseCase;
 import com.delivery_logistics.api.service.DeliveryService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
@@ -13,36 +15,31 @@ import java.util.function.Consumer;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class OrderConsumer {
 
-    private final DeliveryService deliveryService;
-
-    public OrderConsumer(DeliveryService deliveryService) {
-        this.deliveryService = deliveryService;
-    }
+    private final SaveDeliveryUseCase saveDeliveryUseCase;
 
     @Bean
-    public Consumer<Message<OrderDeliveryDTO>> processOrder() {
+    public Consumer<Message<OrderDelivery>> processOrder() {
         return message -> {
-            OrderDeliveryDTO orderDeliveryDTO = message.getPayload();
-            log.info("Order received: {}", orderDeliveryDTO);
+            OrderDelivery orderDelivery = message.getPayload();
+            log.info("Order received: {}", orderDelivery);
 
             try {
-                // Processar a mensagem e salvar nos dados de entrega
-                Delivery delivery = new Delivery(
-                        orderDeliveryDTO.idCustomer(),
-                        orderDeliveryDTO.idProduct(),
-                        orderDeliveryDTO.quantity(),
-                        orderDeliveryDTO.paymentMethod(),
-                        OrderStatus.PENDING // Define como pendente inicialmente
+                DeliveryEntity delivery = new DeliveryEntity(
+                        orderDelivery.idCustomer(),
+                        orderDelivery.idProduct(),
+                        orderDelivery.quantity(),
+                        orderDelivery.paymentMethod(),
+                        OrderStatus.PENDING
                 );
 
-                deliveryService.saveDelivery(delivery);
-                log.info("Delivery saved successfully: {}", delivery);
+                saveDeliveryUseCase.execute(delivery);
+                log.info("DeliveryEntity saved successfully: {}", delivery);
 
             } catch (Exception ex) {
-                log.error("Error processing order: {}", orderDeliveryDTO, ex);
-                // Tratar a falha adequadamente, como publicar em uma DLQ
+                log.error("Error processing order: {}", orderDelivery, ex);
             }
         };
     }

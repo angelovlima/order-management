@@ -1,7 +1,7 @@
 package com.delivery_logistics.api.service;
 
-import com.delivery_logistics.api.model.entity.Delivery;
-import com.delivery_logistics.api.model.repository.DeliveryRepository;
+import com.delivery_logistics.api.config.db.entity.DeliveryEntity;
+import com.delivery_logistics.api.config.db.repository.DeliveryRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +13,7 @@ public class DeliveryService {
         this.deliveryRepository = deliveryRepository;
     }
 
-    public void saveDelivery(Delivery delivery) {
+    public void saveDelivery(DeliveryEntity delivery) {
         deliveryRepository.save(delivery);
     }
 }

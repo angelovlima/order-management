@@ -1,5 +1,6 @@
 package com.product_catalog.api.product.controller;
 
+import com.product_catalog.api.config.batch.BatchResponse;
 import com.product_catalog.api.config.batch.JobExecutionValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,21 +29,31 @@ public class BatchController {
     }
 
     @GetMapping("/run")
-    public ResponseEntity<String> runBatchManually() {
+    public ResponseEntity<BatchResponse> runBatchManually() {
+        BatchResponse response = new BatchResponse();
+        response.setJobName(processProduct.getName());
+
         if (jobExecutionValidator.isJobAlreadyExecuted(processProduct.getName())) {
-            return ResponseEntity.badRequest()
-                    .body("Job 'processProduct' já foi executado com sucesso ou está em andamento.");
+            response.setMessage("Job já foi executado com sucesso ou está em andamento.");
+            response.setStatus("BAD_REQUEST");
+            return ResponseEntity.badRequest().body(response);
         }
+
         try {
             JobParametersBuilder paramsBuilder = new JobParametersBuilder()
                     .addLong("startAt", System.currentTimeMillis());
 
             jobLauncher.run(processProduct, paramsBuilder.toJobParameters());
             logger.info("Job 'processProduct' executado manualmente.");
-            return ResponseEntity.ok("Job 'processProduct' executado manualmente com sucesso.");
+            response.setMessage("Job executado manualmente com sucesso.");
+            response.setStatus("OK");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             logger.error("Erro ao executar o Job 'processProduct' manualmente:", e);
-            return ResponseEntity.status(500).body("Erro ao executar o Job manualmente.");
+            response.setMessage("Erro ao executar o Job manualmente.");
+            response.setStatus("ERROR");
+            return ResponseEntity.status(500).body(response);
         }
     }
+
 }

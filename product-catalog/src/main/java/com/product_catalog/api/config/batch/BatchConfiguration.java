@@ -65,8 +65,8 @@ public class BatchConfiguration {
 
         return new FlatFileItemReaderBuilder<ProductEntity>()
                 .name("productItemReader")
-                .resource(new ClassPathResource("product.csv"))
-                .linesToSkip(1) // Ignora o cabeçalho
+                .resource(new ClassPathResource("product_large.csv"))
+                .linesToSkip(1)
                 .delimited()
                 .names("name", "price", "stock_quantity")
                 .fieldSetMapper(fieldSetMapper)
